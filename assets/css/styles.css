@@ -1,0 +1,8 @@
+#submit {
+  visibility: hidden;
+}
+
+#display {
+  visibility: hidden;
+}
+/* timer - make it stick to top when scrolling */
