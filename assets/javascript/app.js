@@ -1,5 +1,7 @@
 let qNumber = 1;
-let correct, wrong;
+let correct = 0;
+let wrong = 0;
+let unanswered = 0;
 
 let questions = [
   {
@@ -149,11 +151,13 @@ var timer = {
 
 // When the clicking "Quiz Me!":
 $("#start-button").on("click", event => {
-  //   hide <p> and start button
+  //   hide and show specific segments of html
   $("p").css("visibility", "hidden");
   $("#start-button").css("visibility", "hidden");
   $("#submit").css("visibility", "visible");
   $("#display").css("visibility", "visible");
+  $("#results").css("visibility", "hidden");
+
   // start timer
   timer.start();
   // for each question
@@ -205,24 +209,47 @@ $("#submit").on("click", event => {
   checkAnswers();
   timer.stop();
   timer.reset();
+  qNumber = 1;
+  correct = 0;
+  wrong = 0;
+  unanswered = 0;
+
   $("#display").css("visibility", "hidden");
 });
-// function check answer
+// function to see wether the value of the radio button matches the corerct answer, or did not pick an answer
 function checkAnswers() {
-  // add up radio buttons where the value === answer
-  // questions not answered: 10 - sum of checked
-  // questions missed: radio button checked - correct
   console.log("check answers");
+
+  questions.forEach((element, index) => {
+    qNumber = index + 1;
+    var userAnswer = $(`input[name=q${qNumber}]:checked`).val();
+    console.log(userAnswer);
+    if (userAnswer === element.answer) {
+      correct++;
+    } else if (userAnswer === undefined) {
+      console.log("undefined");
+      unanswered++;
+    } else {
+      wrong++;
+    }
+  });
+  console.log(correct);
+  console.log(unanswered);
+  console.log(wrong);
+
+  // show results
+  $("#results").html(
+    `<h3>The Results Are In!</h3>
+          <p>  Correct: ${correct}</p>
+          <p>  Wrong: ${wrong}</p>
+          <p>  Unanswered: ${unanswered}</p>`
+  );
+
   // empty questions
   $(".content").empty();
   // hide submit button
   $("#submit").css("visibility", "hidden");
   $("#display").css("visibility", "hidden");
   $("#start-button").css("visibility", "visible");
-  qNumber = 1;
-
-  //   show results
-  //   $("#results").append(
-
-  //   );
+  $("#results").css("visibility", "visible");
 }
